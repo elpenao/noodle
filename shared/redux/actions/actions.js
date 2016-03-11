@@ -3,6 +3,21 @@ import fetch from 'isomorphic-fetch';
 
 const baseURL = typeof window === 'undefined' ? process.env.BASE_URL || (`http://localhost:${(process.env.PORT || 8000)}`) : '';
 
+export function search(term) {
+  return (dispatch) => {
+    return fetch(`${baseURL}/api/search/${term}`).
+      then((response) => response.json()).
+      then((response) => dispatch(addResults(response.results)));
+  };
+}
+
+export function addResults(results) {
+  return {
+    type: ActionTypes.ADD_RESULTS,
+    results,
+  };
+}
+
 export function addPost(post) {
   return {
     type: ActionTypes.ADD_POST,
@@ -77,6 +92,14 @@ export function fetchPosts() {
     return fetch(`${baseURL}/api/getPosts`).
       then((response) => response.json()).
       then((response) => dispatch(addPosts(response.posts)));
+  };
+}
+
+export function fetchPages() {
+  return (dispatch) => {
+    return fetch(`${baseURL}/api/getPages`).
+      then((response) => response.json()).
+      then((response) => dispatch(addPosts(response.pages)));
   };
 }
 

@@ -22,6 +22,11 @@ const postReducer = (state = initialState, action) => {
         post: action.slug,
       };
 
+    case ActionTypes.ADD_RESULTS :
+      return {
+        results: action.results
+      };
+
     case ActionTypes.ADD_POSTS :
       return {
         posts: action.posts,
