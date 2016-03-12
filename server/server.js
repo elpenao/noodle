@@ -29,7 +29,6 @@ import { match, RouterContext } from 'react-router';
 import routes from '../shared/routes';
 import { fetchComponentData } from './util/fetchData';
 import api from './routes/api.routes';
-import dummyData from './dummyData';
 import serverConfig from './config';
 
 // MongoDB Connection
@@ -38,9 +37,6 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
     console.error('Please make sure Mongodb is installed and running!'); // eslint-disable-line no-console
     throw error;
   }
-
-  // feed some dummy data in DB.
-  dummyData();
 });
 
 // Apply body Parser and server public assets and routes
@@ -59,7 +55,7 @@ const renderFullPage = (html, initialState) => {
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>MERN Starter - Blog App</title>
+        <title>Noodle</title>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
         <link rel="stylesheet" href=${cssPath} />
@@ -88,7 +84,7 @@ app.use((req, res) => {
       return res.status(404).end('Not found!');
     }
 
-    const initialState = { posts: [], post: {} };
+    const initialState = { crawling: false };
 
     const store = configureStore(initialState);
 

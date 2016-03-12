@@ -4,10 +4,6 @@ import cheerio from 'cheerio';
 import request from 'request';
 import URL from 'url-parse';
 import Page from '../models/page';
-import Xray from 'x-ray';
-
-var x = new Xray();
-
 
 const router = new Router();
 
@@ -98,6 +94,7 @@ export function getPages(req, res) {
 }
 
 export function search(req, res) {
+  if (req.params.query === 'undefined') return res.json({})
   Page
     .find({ $text: { $search: req.params.query } }, { score: { $meta: "textScore" } })
     .sort({ score: { $meta: 'textScore' } })

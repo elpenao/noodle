@@ -9,9 +9,12 @@ class NoodleContainer extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      term: ""
+      term: "",
+      newsite: ""
     };
     this.search = this.search.bind(this);
+    this.crawl = this.crawl.bind(this);
+    this.updateSite = this.updateSite.bind(this);
   }
 
   search(event) {
@@ -21,10 +24,15 @@ class NoodleContainer extends Component {
     this.props.dispatch(Actions.search(event.target.value));
   }
 
-  componentDidMount() {
-    if(!this.props.results) {
-      this.props.dispatch(Actions.search("mongoose"));
-    }
+  updateSite(event) {
+    this.setState({
+      newsite: event.target.value
+    })
+  }
+
+  crawl(event) {
+    console.log("crawling")
+    this.props.dispatch(Actions.crawl(this.state.newsite));
   }
 
   render() {
@@ -34,7 +42,6 @@ class NoodleContainer extends Component {
         <a href={el.url}>Visit</a>
       </li>
     ))
-    const search = _.debounce((term) => { this.search(term) }, 3000);
 
     return (
       <div>
@@ -44,7 +51,20 @@ class NoodleContainer extends Component {
             <span className="input-group-addon" id="basic-addon1">Search Noodle</span>
             <input type="text" value={this.state.term} onChange={this.search} className="form-control" placeholder="What is mongoose?" />
           </div>
-          <ul>{results}</ul>
+          <div className='col-lg-8'>
+            <ul>{results}</ul>
+          </div>
+          <div className='col-lg-4'>
+            <h3>Missing Results?</h3>
+            <h4>Crawl a new site</h4>
+              <div className="input-group">
+                <input value={this.state.newsite} onChange={this.updateSite} type="text" className="form-control" placeholder="Crawl..." />
+                <span className="input-group-btn">
+                  <button className="btn btn-default" type="button" onClick={this.crawl}>Go!</button>
+                </span>
+              </div>
+              <h3>Am I crawling? {this.props.crawling ? 'yes' : 'no'}</h3>
+          </div>
         </div>
         <Footer />
       </div>
@@ -59,7 +79,8 @@ NoodleContainer.contextTypes = {
 
 function mapStateToProps(store) {
   return {
-    results: store.results
+    results: store.results,
+    crawling: store.crawling
   };
 }
 
